@@ -1,0 +1,13 @@
+{
+  "name": "new_moon",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
+  },
+  "scripts": {
+    "build": "cd foodie-map/knife-set && npm install && npm run build",
+    "start": "cd foodie-map/knife-set && npm start"
+  }
+}
