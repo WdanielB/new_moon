@@ -1,0 +1,26 @@
+{
+  "name": "knife-set",
+  "description": "KS Score - Sistema de calificación gastronómica para Arequipa",
+  "repository": "https://github.com/WdanielB/new_moon",
+  "logo": "https://nodejs.org/static/images/logo.svg",
+  "keywords": ["next.js", "react", "supabase", "food", "arequipa"],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": {
+      "description": "Supabase project URL",
+      "required": true
+    },
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY": {
+      "description": "Supabase anon/publishable key",
+      "required": true
+    },
+    "NEXT_PUBLIC_SUPER_USER_EMAIL": {
+      "description": "Email del super usuario admin",
+      "required": true
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
