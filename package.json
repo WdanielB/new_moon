@@ -7,7 +7,8 @@
     "npm": "10.x"
   },
   "scripts": {
-    "build": "cd foodie-map/knife-set && npm install && npm run build",
-    "start": "cd foodie-map/knife-set && npm start"
+    "dev": "cd knife-set && npm run dev",
+    "build": "cd knife-set && npm install && npm run build",
+    "start": "cd knife-set && npm start"
   }
 }
