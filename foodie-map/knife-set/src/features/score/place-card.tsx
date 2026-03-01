@@ -39,7 +39,7 @@ function ScoreRing({ score, size = 44 }: { score: number; size?: number }) {
           : "stroke-ks-rose";
 
   return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+    <div className="score-glow relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
         <circle
           cx={size / 2}
@@ -113,7 +113,7 @@ export function PlaceCard({
     <button
       type="button"
       onClick={onClick}
-      className={`group flex w-full flex-col gap-3 rounded-xl border p-4 text-left transition-all ${
+      className={`card-glow group flex w-full flex-col gap-3 rounded-xl border p-4 text-left transition-all ${
         selected
           ? "border-primary/40 bg-primary/5 shadow-[0_0_20px_-6px] shadow-primary/20"
           : "border-border bg-card hover:border-primary/20 hover:bg-ks-surface-elevated"
@@ -131,7 +131,7 @@ export function PlaceCard({
               {cat.icon} {category}
             </span>
           </div>
-          <h3 className="text-sm font-semibold leading-snug">{name}</h3>
+          <h3 className="font-display text-sm font-semibold leading-snug">{name}</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">{address}</p>
         </div>
         <ScoreRing score={ksScore} />

@@ -9,7 +9,26 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const run = async () => {
-      await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        // Ensure profile exists for OAuth users
+        const { data: existing } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (!existing) {
+          await supabase.from("profiles").upsert({
+            id: session.user.id,
+            email: session.user.email ?? "",
+            full_name: session.user.user_metadata?.full_name ?? session.user.user_metadata?.name ?? null,
+            role: "user",
+          });
+        }
+      }
+
       router.replace("/entrar-score");
     };
 
@@ -17,8 +36,11 @@ export default function AuthCallbackPage() {
   }, [router]);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 text-sm text-muted-foreground md:px-6">
-      Finalizando autenticación...
+    <main className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <p className="text-sm text-muted-foreground">Finalizando autenticación...</p>
+      </div>
     </main>
   );
 }
