@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "cd knife-set && npm run dev",
-    "build": "cd knife-set && npm install && npm run build",
+    "build": "cd knife-set && npm install --include=dev && npm run build",
     "start": "cd knife-set && npm start"
   }
 }
