@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,300..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,59 +6,31 @@
 
 @layer base {
   :root {
-    /* Pantone Palette: Vapor Blue / Amberlight / Skyway / Toffee / Rythmic Red / Tawny Port / Blue Opal / Syrah / Adrenaline Rush / Forest Elf */
-    --background: 30 15% 97%;
-    --foreground: 200 30% 15%;
-    --card: 0 0% 100%;
-    --card-foreground: 200 30% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 200 30% 15%;
-    --primary: 355 72% 45%;       /* Adrenaline Rush #C41E2A */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 25 40% 67%;      /* Amberlight #D4A882 */
-    --secondary-foreground: 200 30% 15%;
-    --muted: 213 25% 82%;         /* Skyway #B5C4D5 */
-    --muted-foreground: 200 20% 40%;
-    --accent: 197 55% 23%;        /* Blue Opal #19445E */
-    --accent-foreground: 0 0% 98%;
-    --destructive: 355 72% 45%;   /* Adrenaline Rush */
-    --destructive-foreground: 0 0% 100%;
-    --border: 213 20% 88%;
-    --input: 213 20% 88%;
-    --ring: 355 72% 45%;
-    --radius: 0.5rem;
-    --chart-1: 355 72% 45%;       /* Adrenaline Rush */
-    --chart-2: 140 24% 39%;       /* Forest Elf */
-    --chart-3: 197 55% 23%;       /* Blue Opal */
-    --chart-4: 25 40% 67%;        /* Amberlight */
-    --chart-5: 24 40% 40%;        /* Toffee */
-  }
-
-  .dark {
-    --background: 200 30% 8%;
-    --foreground: 30 15% 95%;
-    --card: 200 25% 12%;
-    --card-foreground: 30 15% 95%;
-    --popover: 200 25% 12%;
-    --popover-foreground: 30 15% 95%;
-    --primary: 355 72% 45%;       /* Adrenaline Rush #C41E2A */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 340 50% 18%;     /* Syrah #5C1E31 */
-    --secondary-foreground: 30 15% 95%;
-    --muted: 200 20% 16%;
-    --muted-foreground: 213 18% 60%;
-    --accent: 197 55% 23%;        /* Blue Opal #19445E */
-    --accent-foreground: 30 15% 95%;
-    --destructive: 355 72% 35%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 200 20% 18%;
-    --input: 200 20% 18%;
-    --ring: 355 72% 45%;
-    --chart-1: 355 72% 45%;       /* Adrenaline Rush */
-    --chart-2: 140 24% 39%;       /* Forest Elf */
-    --chart-3: 197 55% 23%;       /* Blue Opal */
-    --chart-4: 25 40% 67%;        /* Amberlight */
-    --chart-5: 24 40% 40%;        /* Toffee */
+    --background: 40 41% 88%;
+    --foreground: 24 22% 14%;
+    --card: 42 38% 92%;
+    --card-foreground: 24 22% 14%;
+    --popover: 42 38% 92%;
+    --popover-foreground: 24 22% 14%;
+    --primary: 8 56% 31%;
+    --primary-foreground: 42 38% 94%;
+    --secondary: 36 25% 67%;
+    --secondary-foreground: 24 22% 14%;
+    --muted: 37 24% 79%;
+    --muted-foreground: 25 12% 33%;
+    --accent: 21 27% 24%;
+    --accent-foreground: 42 38% 94%;
+    --destructive: 4 58% 35%;
+    --destructive-foreground: 42 38% 94%;
+    --border: 30 21% 63%;
+    --input: 37 22% 82%;
+    --ring: 8 56% 31%;
+    --radius: 0.35rem;
+    --chart-1: 8 56% 31%;
+    --chart-2: 29 35% 42%;
+    --chart-3: 24 22% 14%;
+    --chart-4: 41 26% 55%;
+    --chart-5: 37 16% 37%;
   }
 }
 
@@ -66,14 +38,79 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground font-sans;
+
+  html {
+    scroll-behavior: smooth;
   }
-  
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Source Serif 4", serif;
+    background-image:
+      linear-gradient(180deg, rgba(86, 63, 42, 0.06), rgba(86, 63, 42, 0.02)),
+      radial-gradient(circle at top left, rgba(121, 86, 56, 0.12), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(70, 45, 28, 0.08), transparent 24%),
+      repeating-linear-gradient(0deg, rgba(60, 43, 27, 0.02), rgba(60, 43, 27, 0.02) 1px, transparent 1px, transparent 3px);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Cormorant Garamond", serif;
+    letter-spacing: 0.01em;
+  }
+
+  ::selection {
+    background: rgba(92, 44, 27, 0.88);
+    color: #f4ebd6;
+  }
+
   /* Utilities for ThreeJS WebGL overlapping */
   .canvas-container {
     canvas {
       @apply focus:outline-none;
     }
+  }
+}
+
+@layer components {
+  .newspaper-shell {
+    @apply border border-[#7f674d]/60 bg-[#efe3c7]/90 shadow-[0_18px_48px_rgba(72,51,30,0.12)];
+  }
+
+  .newspaper-panel {
+    @apply border border-[#94785b]/50 bg-[#f5ecd8]/80;
+  }
+
+  .newspaper-rule {
+    @apply h-px w-full bg-[linear-gradient(90deg,transparent,rgba(61,44,28,0.45),transparent)];
+  }
+
+  .newspaper-kicker {
+    @apply text-[11px] font-semibold uppercase tracking-[0.3em] text-[#6b3525];
+  }
+
+  .newspaper-button {
+    @apply inline-flex items-center justify-center border border-[#4b3625] px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.16em] text-[#24170f] transition-colors hover:bg-[#24170f] hover:text-[#f4ead6] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527] focus-visible:ring-offset-2 focus-visible:ring-offset-[#efe3c7];
+  }
+
+  .newspaper-button-primary {
+    @apply inline-flex items-center justify-center border border-[#5f3527] bg-[#5f3527] px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.16em] text-[#f4ead6] transition-colors hover:bg-[#47271d] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527] focus-visible:ring-offset-2 focus-visible:ring-offset-[#efe3c7];
+  }
+
+  .newspaper-photo {
+    filter: grayscale(100%) sepia(42%) contrast(92%) brightness(0.92);
+  }
+
+  .newspaper-dropcap::first-letter {
+    float: left;
+    margin-right: 0.4rem;
+    line-height: 0.9;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 4rem;
+    font-weight: 700;
   }
 }

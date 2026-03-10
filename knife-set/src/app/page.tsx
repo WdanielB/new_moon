@@ -1,216 +1,291 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { GsapMarquee } from "@/components/ui/gsap-marquee";
-
-const HeroScene = dynamic(() => import("@/components/3d/hero-scene"), {
-  ssr: false,
-});
 
 const LOGO_URL = "https://cdn.shopify.com/s/files/1/0649/4083/4883/files/Diseno_sin_titulo_1.png?v=1772327984";
 const BG_1 = "https://cdn.shopify.com/s/files/1/0649/4083/4883/files/pexels-nerfee-mirandilla-1656989-3186654.jpg?v=1772328445";
 const BG_2 = "https://cdn.shopify.com/s/files/1/0649/4083/4883/files/pexels-kun-fayakun-1238181416-23147806.jpg?v=1772328492";
+const CURRENT_DATE = "10 de marzo de 2026";
+
+const SUPABASE_CONFIGURED = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+);
+
+const FRONT_PAGE_NOTES = [
+  {
+    title: "Agenda cultural",
+    text: "Ferias, conciertos y festivales tratados como noticia principal, no como anexo.",
+    href: "/app/agenda",
+  },
+  {
+    title: "KS Points",
+    text: "Los lugares recomendados quedan ordenados como servicio al lector antes y despues del evento.",
+    href: "/app/score",
+  },
+  {
+    title: "Como funciona",
+    text: "El algoritmo se explica con claridad periodistica para justificar cada recomendacion.",
+    href: "/algoritmo",
+  },
+];
+
+const COLUMNS = [
+  {
+    kicker: "Cronica central",
+    title: "Agenda Cultural",
+    text: "Una portada que anuncia que Knife Set sirve para descubrir a que evento ir, con fecha, contexto y criterio.",
+    href: "/app/agenda",
+    cta: "Abrir agenda",
+  },
+  {
+    kicker: "Servicio publico",
+    title: "Points",
+    text: "La seccion de points acompana la salida completa: donde quedar, comer y seguir la noche sin perder tiempo.",
+    href: "/app/score",
+    cta: "Ver points",
+  },
+  {
+    kicker: "Mesa de analisis",
+    title: "Algoritmo",
+    text: "La metodologia se presenta como editorial tecnico: legible, breve y util para entender el por que de cada portada.",
+    href: "/algoritmo",
+    cta: "Leer analisis",
+  },
+];
+
+const BULLETINS = [
+  "Edicion nocturna dedicada a eventos y ruta gastronomica.",
+  "Narrativa principal: la salida cultural primero, el score como contexto.",
+  SUPABASE_CONFIGURED
+    ? "Mesa de datos conectada a Supabase mediante variables publicas activas."
+    : "Mesa de datos en modo demo: faltan variables publicas para Supabase en el entorno.",
+];
 
 export default function Home() {
-  const marqueeItems = [
-    {
-      id: "1",
-      imageUrl: "https://cdn.shopify.com/s/files/1/0649/4083/4883/files/1.png?v=1772330107",
-      alt: "Elwecco La Feria",
-    },
-    {
-      id: "2",
-      imageUrl: "https://cdn.shopify.com/s/files/1/0649/4083/4883/files/2.png?v=1772330106",
-      alt: "El Show Me The Room",
-    },
-    {
-      id: "3",
-      imageUrl: LOGO_URL,
-      alt: "Knife Set",
-    },
-  ];
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between relative bg-[#111318] text-white overflow-x-hidden">
+    <main className="min-h-screen bg-background px-4 py-4 text-foreground md:px-6 md:py-6">
+      <a
+        href="#portada"
+        className="absolute left-4 top-4 z-50 -translate-y-16 bg-[#f4ead6] px-4 py-2 text-sm font-semibold text-[#24170f] transition-transform focus:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527] focus-visible:ring-offset-2 focus-visible:ring-offset-[#efe3c7]"
+      >
+        Saltar a portada
+      </a>
 
-      {/* ===== HERO: Full-width cinematic background ===== */}
-      <section className="relative w-full min-h-screen flex flex-col">
-        {/* Background photo – horizontal crop */}
-        <div className="absolute inset-0 overflow-hidden">
-          <img
-            src={BG_1}
-            alt="Gastronomía"
-            className="w-full h-full object-cover object-center"
-          />
-          {/* Dark overlay with brand tint */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#111318]" />
-        </div>
-
-        {/* 3D particles layer (behind text, above photo) */}
-        <div className="absolute inset-0 z-[1] opacity-30 mix-blend-screen pointer-events-none">
-          <HeroScene />
-        </div>
-
-        {/* Nav */}
-        <nav className="relative z-20 flex items-center justify-between w-full px-6 md:px-12 py-6">
-          <img
-            src={LOGO_URL}
-            alt="Knife Set"
-            className="h-12 md:h-16 w-auto drop-shadow-lg"
-          />
-          <div className="flex items-center gap-4">
-            <Link href="/algoritmo" className="text-sm text-white/70 hover:text-white transition-colors hidden md:block">Algoritmo</Link>
-            <Link href="/app/agenda" className="text-sm text-white/70 hover:text-white transition-colors hidden md:block">Agenda</Link>
-            <Link href="/login" className="text-sm text-white/80 hover:text-white transition-colors px-4 py-2 border border-white/20 rounded-full hover:border-white/40">Entrar</Link>
-            <Link href="/app/score" className="text-sm font-semibold px-5 py-2 bg-[#C41E2A] text-white rounded-full hover:bg-[#a51923] transition-colors shadow-lg shadow-red-900/30">Ver Ranking</Link>
-          </div>
-        </nav>
-
-        {/* Hero Content */}
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center max-w-5xl mx-auto pb-32">
-          <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-[#C41E2A] animate-pulse" />
-            <span className="text-xs uppercase tracking-widest text-white/60 font-medium">Algoritmo de Consistencia Activo</span>
+      <div className="newspaper-shell mx-auto max-w-7xl overflow-hidden">
+        <header className="border-b border-[#6e573f] px-5 py-4 md:px-8 md:py-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div className="text-xs uppercase tracking-[0.3em] text-[#6b3525]">
+              Edicion cultural de cuchillo y papel
+            </div>
+            <div className="text-center text-xs uppercase tracking-[0.26em] text-[#493627]">
+              Lima, Peru · {CURRENT_DATE}
+            </div>
+            <div className="text-right text-xs uppercase tracking-[0.26em] text-[#493627]">
+              Ano I · Numero 08
+            </div>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[0.9]">
-            <span className="bg-clip-text text-transparent bg-gradient-to-br from-white via-[#D4A882] to-[#8B5E3C]">
-              La Verdad
-            </span>
-            <br />
-            <span className="text-white">Algorítmica.</span>
-          </h1>
+          <div className="newspaper-rule my-4" />
 
-          <p className="max-w-2xl text-base md:text-lg text-white/60 mb-12 font-light leading-relaxed">
-            Ya no importa quién lo dice, importa cómo se mantiene.
-            Evaluamos restaurantes y eventos culturales aplicando{" "}
-            <span className="text-[#C41E2A] font-semibold">Desviación Estándar</span>{" "}
-            para descubrir si realmente son consistentes o si su calidad es una lotería.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/algoritmo"
-              className="px-8 py-4 border border-[#D4A882]/30 text-[#D4A882] rounded-full hover:bg-[#D4A882]/10 transition-all font-medium"
-            >
-              Leer el Paper
-            </Link>
-            <Link
-              href="/app/score"
-              className="px-8 py-4 bg-[#C41E2A] text-white rounded-full hover:bg-[#a51923] transition-all font-semibold shadow-xl shadow-red-900/20 hover:scale-105"
-            >
-              Explorar el Índice
-            </Link>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-bounce">
-          <span className="text-[10px] uppercase tracking-widest text-white/30">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent" />
-        </div>
-      </section>
-
-      {/* ===== MARQUEE: Partners / Logos strip ===== */}
-      <section className="relative z-10 w-full py-16 bg-[#111318] border-t border-white/5">
-        <div className="container mx-auto px-4 mb-4">
-          <h2 className="text-[10px] font-bold text-[#8B5E3C] uppercase tracking-[0.25em] text-center">
-            Puntuados e Involucrados
-          </h2>
-        </div>
-        <div className="w-full">
-          <GsapMarquee items={marqueeItems} speed={1.2} direction="left" />
-          <GsapMarquee items={marqueeItems} speed={0.8} direction="right" />
-        </div>
-      </section>
-
-      {/* ===== SECOND BG SECTION: Methodology with photo ===== */}
-      <section className="relative z-10 w-full overflow-hidden">
-        {/* Background photo 2 – horizontal crop */}
-        <div className="absolute inset-0">
-          <img
-            src={BG_2}
-            alt="Interior restaurante"
-            className="w-full h-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#111318] via-[#111318]/90 to-[#111318]/60" />
-        </div>
-
-        <div className="relative z-10 container mx-auto px-6 py-32 md:py-40">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#C41E2A] font-bold mb-4 block">Métrica Central</span>
-              <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-white">
-                Consistencia<br/>
-                <span className="text-[#D4A882]">sobre Promedio.</span>
-              </h2>
-              <p className="text-white/50 text-lg mb-10 leading-relaxed">
-                El problema con los promedios es que esconden la verdad. Un restaurante con reseñas de &quot;10&quot; y &quot;2&quot; tiene un promedio de &quot;6&quot;. Pareciera normal, pero es una ruleta rusa.
+          <div className="grid gap-4 md:grid-cols-[150px_minmax(0,1fr)_200px] md:items-center">
+            <div className="hidden md:block">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#6b3525]">Edicion</p>
+              <p className="mt-2 text-sm leading-6 text-[#3c2d1f]">
+                La salida nocturna leida como noticia de portada.
               </p>
-              <ul className="space-y-5">
-                <li className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#4E7A52]/20 text-[#4E7A52] flex items-center justify-center shrink-0 border border-[#4E7A52]/30 text-lg font-bold">&#10003;</div>
-                  <div>
-                    <strong className="block text-white text-sm">Sello Titanio (Constante)</strong>
-                    <span className="text-white/40 text-sm">Varianza baja. Sabes exactamente qué vas a recibir sin sorpresas.</span>
-                  </div>
-                </li>
-                <li className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#C41E2A]/20 text-[#C41E2A] flex items-center justify-center shrink-0 border border-[#C41E2A]/30 text-lg font-bold">!</div>
-                  <div>
-                    <strong className="block text-white text-sm">Lotería (Volátil)</strong>
-                    <span className="text-white/40 text-sm">Varianza alta. Penalización severa. Hoy bueno, mañana pésimo.</span>
-                  </div>
-                </li>
-              </ul>
             </div>
 
-            {/* Equation card */}
-            <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-xl p-10 flex flex-col justify-center min-h-[360px]">
-              <div className="text-center space-y-6">
-                <div className="text-[10px] uppercase tracking-[0.25em] text-[#B5C4D5] font-bold">Score Oficial KS</div>
-                <div className="font-mono text-white/40 text-sm">Promedio - (Penalty &times; Desviaci&oacute;n Est&aacute;ndar)</div>
-                <div className="flex items-center justify-center gap-4 text-4xl font-light py-6">
-                  <span className="text-white font-black">8.5</span>
-                  <span className="text-white/20">=</span>
-                  <span className="text-[#19445E] font-bold">9.0</span>
-                  <span className="text-white/20">-</span>
-                  <span className="text-[#C41E2A] font-bold">0.5</span>
+            <div className="text-center">
+              <p className="text-[11px] uppercase tracking-[0.42em] text-[#6b3525]">La gaceta de Knife Set</p>
+              <h1 className="mt-1 text-5xl font-bold uppercase tracking-[0.14em] text-[#1c140d] md:text-7xl">
+                Knife Set
+              </h1>
+              <p className="mt-2 text-sm uppercase tracking-[0.28em] text-[#4a3829] md:text-base">
+                Agenda cultural, points y criterio en primera plana
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center gap-4 md:justify-end">
+              <img src={LOGO_URL} alt="Knife Set" className="h-12 w-auto opacity-80 sepia" />
+            </div>
+          </div>
+
+          <div className="newspaper-rule my-4" />
+
+          <nav aria-label="Principal" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#302218] md:text-sm">
+            <Link href="/app/agenda" className="hover:text-[#6b3525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+              Agenda cultural
+            </Link>
+            <Link href="/app/score" className="hover:text-[#6b3525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+              KS Points
+            </Link>
+            <Link href="/algoritmo" className="hover:text-[#6b3525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+              Como funciona
+            </Link>
+            <Link href="/login" className="hover:text-[#6b3525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+              Redaccion
+            </Link>
+          </nav>
+        </header>
+
+        <div id="portada" className="px-5 py-6 md:px-8 md:py-8">
+          <section className="grid gap-6 border-b border-[#6e573f] pb-8 lg:grid-cols-[minmax(0,1.2fr)_360px]">
+            <article className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="border-b border-[#8d7359] pb-6 lg:border-b-0 lg:border-r lg:pr-6">
+                <p className="newspaper-kicker">Titular mayor</p>
+                <h2 className="mt-3 max-w-4xl text-5xl font-bold leading-[0.92] text-[#18120d] md:text-7xl">
+                  La ciudad vuelve a salir cuando el evento aguanta la multitud.
+                </h2>
+                <p className="mt-5 max-w-3xl text-xl leading-8 text-[#35271c]">
+                  Knife Set cambia de tono y se convierte en un periodico antiguo de cultura nocturna:
+                  primero anuncia ferias, conciertos y festivales; despues ofrece points y metodo para que
+                  el lector tome una mejor decision.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link href="/app/agenda" className="newspaper-button-primary">
+                    Ver la primera plana
+                  </Link>
+                  <Link href="/app/score" className="newspaper-button">
+                    Consultar points
+                  </Link>
                 </div>
-                <div className="text-xs text-white/30">Ejemplo: Local con ligeras variaciones de calidad</div>
-                <div className="mt-6 flex items-center justify-center gap-6 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#4E7A52]" />
-                    <span className="text-white/40">&sigma; &lt; 1.0</span>
+
+                <div className="newspaper-rule my-6" />
+
+                <p className="newspaper-dropcap text-base leading-8 text-[#2d2016]">
+                  Esta nueva portada usa tono editorial, bordes de imprenta, papel envejecido y jerarquia
+                  de columnas para dejar una idea clara: el producto no vende solo teoria ni ranking, vende
+                  una salida concreta con respaldo, contexto y lectura de consistencia.
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                <figure className="newspaper-panel overflow-hidden p-2">
+                  <img
+                    src={BG_1}
+                    alt="Publico reunido en un evento gastronomico nocturno"
+                    className="newspaper-photo h-[280px] w-full object-cover md:h-[360px]"
+                  />
+                  <figcaption className="border-t border-[#8d7359] px-3 py-3 text-sm leading-6 text-[#4b3727]">
+                    La portada deja atras el aspecto digital y entra en una estetica de suplemento cultural antiguo.
+                  </figcaption>
+                </figure>
+
+                <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-1">
+                  {FRONT_PAGE_NOTES.map((note) => (
+                    <article key={note.title} className="newspaper-panel p-4">
+                      <p className="newspaper-kicker">Seccion</p>
+                      <h3 className="mt-2 text-2xl font-semibold text-[#1e1610]">{note.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-[#4d3a2b]">{note.text}</p>
+                      <Link href={note.href} className="mt-4 inline-block text-sm font-semibold uppercase tracking-[0.16em] text-[#6b3525] underline-offset-4 hover:underline">
+                        Abrir
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </article>
+
+            <aside className="space-y-4">
+              <section className="newspaper-panel p-5">
+                <p className="newspaper-kicker">Boletin tecnico</p>
+                <h3 className="mt-2 text-3xl font-semibold text-[#1c140d]">Estado de mesa de datos</h3>
+                <ul className="mt-4 space-y-3 text-sm leading-6 text-[#433122]">
+                  {BULLETINS.map((item) => (
+                    <li key={item} className="border-b border-dashed border-[#9b8165] pb-3 last:border-b-0 last:pb-0">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="newspaper-panel p-5">
+                <p className="newspaper-kicker">Sumario</p>
+                <dl className="mt-4 space-y-4 text-[#2f2217]">
+                  <div>
+                    <dt className="text-xs uppercase tracking-[0.2em] text-[#6b3525]">Agenda</dt>
+                    <dd className="mt-1 text-3xl font-semibold">Frente principal</dd>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#D4A882]" />
-                    <span className="text-white/40">&sigma; 1.1-2.5</span>
+                  <div>
+                    <dt className="text-xs uppercase tracking-[0.2em] text-[#6b3525]">Estilo</dt>
+                    <dd className="mt-1 text-3xl font-semibold">Papel, serif y filetes</dd>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#C41E2A]" />
-                    <span className="text-white/40">&sigma; &gt; 2.5</span>
+                  <div>
+                    <dt className="text-xs uppercase tracking-[0.2em] text-[#6b3525]">Narrativa</dt>
+                    <dd className="mt-1 text-3xl font-semibold">Evento antes que ranking</dd>
                   </div>
+                </dl>
+              </section>
+            </aside>
+          </section>
+
+          <section className="grid gap-0 border-b border-[#6e573f] py-8 md:grid-cols-3">
+            {COLUMNS.map((column, index) => (
+              <article
+                key={column.title}
+                className={`p-5 ${index < COLUMNS.length - 1 ? "border-b border-[#8d7359] md:border-b-0 md:border-r" : ""}`}
+              >
+                <p className="newspaper-kicker">{column.kicker}</p>
+                <h3 className="mt-3 text-4xl font-semibold text-[#1b140f]">{column.title}</h3>
+                <p className="mt-3 text-base leading-8 text-[#413023]">{column.text}</p>
+                <Link href={column.href} className="mt-5 inline-block text-sm font-semibold uppercase tracking-[0.16em] text-[#6b3525] underline-offset-4 hover:underline">
+                  {column.cta}
+                </Link>
+              </article>
+            ))}
+          </section>
+
+          <section className="grid gap-6 py-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="newspaper-panel p-5 md:p-6">
+              <p className="newspaper-kicker">Mesa de redaccion</p>
+              <h3 className="mt-3 text-5xl font-semibold leading-none text-[#1b140f] md:text-6xl">
+                Primero el evento. Luego el point. Siempre la evidencia.
+              </h3>
+              <p className="mt-4 text-lg leading-8 text-[#3f2e22]">
+                La estructura de portada funciona como un diario antiguo: gran titular, bajada amplia,
+                columnas laterales, sumario tecnico y una foto tratada como archivo de imprenta.
+              </p>
+              <p className="mt-4 text-base leading-8 text-[#433122]">
+                El resultado se siente menos app generica y mas suplemento cultural: una pieza con tono,
+                memoria visual y una jerarquia que invita a leer antes de hacer clic.
+              </p>
+            </div>
+
+            <div className="newspaper-panel overflow-hidden p-2">
+              <img
+                src={BG_2}
+                alt="Mesas, luces y escenario listos para una noche cultural"
+                className="newspaper-photo h-[280px] w-full object-cover md:h-[360px]"
+              />
+              <div className="grid gap-0 border-t border-[#8d7359] md:grid-cols-3">
+                <div className="p-4 md:border-r md:border-[#8d7359]">
+                  <p className="newspaper-kicker">Estetica</p>
+                  <p className="mt-2 text-sm leading-6 text-[#433122]">Tipografia serif, negro deslavado, filetes y papel envejecido.</p>
+                </div>
+                <div className="p-4 md:border-r md:border-[#8d7359]">
+                  <p className="newspaper-kicker">Lectura</p>
+                  <p className="mt-2 text-sm leading-6 text-[#433122]">Bloques modulares que guian la mirada como una primera pagina.</p>
+                </div>
+                <div className="p-4">
+                  <p className="newspaper-kicker">Accion</p>
+                  <p className="mt-2 text-sm leading-6 text-[#433122]">CTAs rectangulares y sobrios, mas cercanos a una llamada editorial que a una app brillante.</p>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
-      </section>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="relative z-10 w-full py-12 bg-[#0a0c10] border-t border-white/5">
-        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <img src={LOGO_URL} alt="Knife Set" className="h-8 w-auto opacity-50" />
-          <div className="flex gap-6 text-xs text-white/30">
-            <Link href="/algoritmo" className="hover:text-white/60 transition-colors">Algoritmo</Link>
-            <Link href="/app/score" className="hover:text-white/60 transition-colors">Ranking</Link>
-            <Link href="/app/agenda" className="hover:text-white/60 transition-colors">Agenda</Link>
+        <footer className="border-t border-[#6e573f] px-5 py-5 md:px-8">
+          <div className="flex flex-col gap-3 text-center text-xs uppercase tracking-[0.22em] text-[#4b3727] md:flex-row md:items-center md:justify-between">
+            <span>Knife Set · Gaceta nocturna</span>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link href="/app/agenda" className="hover:text-[#6b3525]">Agenda</Link>
+              <Link href="/app/score" className="hover:text-[#6b3525]">Points</Link>
+              <Link href="/algoritmo" className="hover:text-[#6b3525]">Analisis</Link>
+            </div>
+            <span>Impreso en papel digital · 2026</span>
           </div>
-          <span className="text-xs text-white/20">&copy; 2026 Knife Set. Todos los derechos reservados.</span>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </main>
   );
 }

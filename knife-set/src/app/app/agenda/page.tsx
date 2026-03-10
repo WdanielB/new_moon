@@ -45,6 +45,9 @@ const MOCK_EVENTS = [
 ];
 
 const EVENT_TYPES = ["Feria", "Festival", "Concierto", "Cultural", "Pop-Up", "Otro"];
+const SUPABASE_CONFIGURED = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+);
 
 /* ── Component ─────────────────────────────────── */
 export default function AgendaPage() {
@@ -104,309 +107,373 @@ export default function AgendaPage() {
       ? MOCK_EVENTS
       : MOCK_EVENTS.filter((e) => e.event_type === filter);
 
-  return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="font-bold tracking-tighter text-xl">
-            KNIFE<span className="text-primary">SET</span>
-          </Link>
-          <span className="text-xs text-white/50 bg-white/5 px-2 py-1 rounded-full border border-white/10">
-            AGENDA
-          </span>
-        </div>
-        <nav className="flex items-center gap-6 text-sm font-medium">
-          <Link
-            href="/app/score"
-            className="text-white/60 hover:text-white transition-colors"
-          >
-            Directorio
-          </Link>
-          <Link
-            href="/algoritmo"
-            className="text-white/60 hover:text-white transition-colors"
-          >
-            Algoritmo
-          </Link>
-          <Link
-            href="/login"
-            className="bg-white text-black px-4 py-2 rounded-full hover:bg-white/80 transition-colors"
-          >
-            Entrar
-          </Link>
-        </nav>
-      </header>
+  const toggleForm = () => {
+    setShowForm((value) => !value);
+    setSubmitted(false);
+  };
 
-      {/* Hero + CTA */}
-      <div className="container mx-auto px-4 py-12 md:py-24">
-        <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-primary">
-              Agenda Cultural.
-            </h1>
-            <p className="text-gray-400 text-lg max-w-2xl">
-              Ferias, conciertos y festivales evaluados bajo un criterio de
-              organización, experiencia y precio. La consistencia también
-              penaliza eventos recurrentes mal organizados.
-            </p>
+  return (
+    <main className="min-h-screen bg-background px-4 py-4 text-foreground md:px-6 md:py-6">
+      <a
+        href="#agenda-contenido"
+        className="absolute left-4 top-4 z-[60] -translate-y-16 bg-[#f4ead6] px-4 py-2 text-sm font-semibold text-[#24170f] transition-transform focus:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527] focus-visible:ring-offset-2 focus-visible:ring-offset-[#efe3c7]"
+      >
+        Saltar a la agenda
+      </a>
+
+      <div className="newspaper-shell mx-auto max-w-7xl overflow-hidden">
+        <header className="border-b border-[#6e573f] px-5 py-4 md:px-8 md:py-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="newspaper-kicker">Edicion de agenda</p>
+              <Link href="/" className="mt-1 block text-4xl font-bold uppercase tracking-[0.12em] text-[#1b140f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+                Knife Set
+              </Link>
+            </div>
+            <span className="border border-[#7f674d] px-3 py-2 text-xs uppercase tracking-[0.26em] text-[#4b3727]">
+              Agenda cultural
+            </span>
+            <nav className="flex flex-wrap items-center gap-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#302218] md:text-sm">
+              <Link href="/app/score" className="hover:text-[#6b3525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+                Directorio
+              </Link>
+              <Link href="/algoritmo" className="hover:text-[#6b3525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+                Algoritmo
+              </Link>
+              <Link href="/login" className="hover:text-[#6b3525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]">
+                Redaccion
+              </Link>
+            </nav>
+          </div>
+        </header>
+
+        <div id="agenda-contenido" className="px-5 py-6 md:px-8 md:py-8">
+        <section className="mb-8 newspaper-panel p-6 md:p-8" aria-labelledby="agenda-title">
+          <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="newspaper-kicker mb-3">
+                Agenda central
+              </p>
+              <h1 id="agenda-title" className="mb-4 text-5xl font-bold tracking-tight text-[#5f3527] md:text-7xl">
+                Agenda Cultural.
+              </h1>
+              <p className="max-w-3xl text-lg leading-8 text-[#3f2e22]">
+                Ferias, conciertos y festivales evaluados por organizacion, experiencia y precio.
+                La consistencia tambien penaliza eventos recurrentes mal ejecutados.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={toggleForm}
+              aria-expanded={showForm}
+              aria-controls="solicitud-evento"
+              className="newspaper-button-primary shrink-0 gap-2"
+            >
+              {showForm ? <>✕ Cerrar formulario</> : <>＋ Solicitar evento</>}
+            </button>
           </div>
 
-          <button
-            onClick={() => setShowForm((v) => !v)}
-            className="shrink-0 flex items-center gap-2 bg-primary text-black font-bold text-sm px-6 py-3 rounded-full hover:brightness-110 transition-all"
-          >
-            {showForm ? (
-              <>✕ Cerrar</>
-            ) : (
-              <>＋ Solicitar Evento</>
-            )}
-          </button>
-        </div>
+          <div className="grid gap-4 md:grid-cols-3" aria-label="Resumen de estado">
+            <div className="newspaper-panel p-4">
+              <p className="mb-1 text-xs uppercase tracking-[0.2em] text-[#6b3525]">Eventos visibles</p>
+              <p className="text-3xl font-bold text-[#1b140f]">{filtered.length}</p>
+              <p className="mt-2 text-sm leading-6 text-[#4b3727]">La portada de eventos ahora tiene prioridad dentro del producto.</p>
+            </div>
+            <div className="newspaper-panel p-4">
+              <p className="mb-1 text-xs uppercase tracking-[0.2em] text-[#6b3525]">Fuente de datos</p>
+              <p className="text-lg font-bold text-[#1b140f]">{SUPABASE_CONFIGURED ? "Supabase disponible" : "Modo demo"}</p>
+              <p className="mt-2 text-sm leading-6 text-[#4b3727]">
+                {SUPABASE_CONFIGURED
+                  ? "Hay variables publicas de Supabase. Esta vista aun usa datos mock hasta conectar lecturas reales."
+                  : "No hay variables publicas de Supabase en este workspace. La agenda sigue con datos mock."}
+              </p>
+            </div>
+            <div className="newspaper-panel p-4">
+              <p className="mb-1 text-xs uppercase tracking-[0.2em] text-[#6b3525]">MCP</p>
+              <p className="text-lg font-bold text-[#1b140f]">No detectado en repo</p>
+              <p className="mt-2 text-sm leading-6 text-[#4b3727]">No se encontro una configuracion MCP de Supabase en el repositorio.</p>
+            </div>
+          </div>
+        </section>
 
-        {/* ── Solicitud Form ── */}
-        {showForm && (
-          <div className="mb-16 border border-white/10 rounded-2xl bg-zinc-950 p-6 md:p-10 max-w-2xl">
+        <section className="mb-12" aria-labelledby="solicitudes-title">
+          <h2 id="solicitudes-title" className="sr-only">
+            Solicitudes de nuevos eventos
+          </h2>
+
+          <div aria-live="polite" className="sr-only">
+            {submitted ? "Solicitud enviada correctamente" : showForm ? "Formulario de solicitud abierto" : "Formulario de solicitud cerrado"}
+          </div>
+
+          <div>
+          {showForm && (
+            <div
+              id="solicitud-evento"
+              className="newspaper-panel max-w-2xl p-6 md:p-10"
+            >
             {submitted ? (
-              <div className="text-center py-12">
+              <div className="py-12 text-center" role="status" aria-live="polite">
                 <div className="text-5xl mb-4">✓</div>
-                <h3 className="text-xl font-bold mb-2">Solicitud Enviada</h3>
-                <p className="text-gray-400 text-sm">
-                  Un administrador revisará tu evento. Te notificaremos cuando
+                <h3 className="mb-2 text-3xl font-semibold text-[#1b140f]">Solicitud Enviada</h3>
+                <p className="text-sm leading-6 text-[#4b3727]">
+                  Un administrador revisara tu evento. Te notificaremos cuando
                   sea aprobado.
                 </p>
               </div>
             ) : (
               <>
                 <div className="mb-6">
-                  <h3 className="text-lg font-bold mb-1">
+                  <h3 className="mb-1 text-3xl font-semibold text-[#1b140f]">
                     Solicitar Inclusión de Evento
                   </h3>
-                  <p className="text-sm text-gray-500">
-                    Completa el formulario y un administrador aprobará tu evento
+                  <p className="text-sm leading-6 text-[#4b3727]">
+                    Completa el formulario y un administrador aprobara tu evento
                     para la agenda pública.
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {/* Name */}
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider">
+                      <label htmlFor="event-name" className="mb-1.5 block text-xs uppercase tracking-wider text-[#4b3727]">
                         Nombre del evento *
                       </label>
                       <input
+                        id="event-name"
                         name="name"
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors placeholder:text-gray-600"
+                        className="w-full border border-[#8d7359] bg-[#fbf5e7] px-4 py-2.5 text-sm text-[#24170f] transition-colors placeholder:text-[#8b7a66] focus:outline-none focus-visible:border-[#5f3527] focus-visible:ring-2 focus-visible:ring-[#b88a6e]/40"
                         placeholder="e.g. Street Food Weekend"
                       />
                     </div>
-                    {/* Type */}
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider">
+                      <label htmlFor="event-type" className="mb-1.5 block text-xs uppercase tracking-wider text-[#4b3727]">
                         Tipo *
                       </label>
                       <select
+                        id="event-type"
                         name="event_type"
                         value={formData.event_type}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors"
+                        className="w-full border border-[#8d7359] bg-[#fbf5e7] px-4 py-2.5 text-sm text-[#24170f] transition-colors focus:outline-none focus-visible:border-[#5f3527] focus-visible:ring-2 focus-visible:ring-[#b88a6e]/40"
                       >
                         {EVENT_TYPES.map((t) => (
-                          <option key={t} value={t} className="bg-black">
+                          <option key={t} value={t} className="bg-[#fbf5e7] text-[#24170f]">
                             {t}
                           </option>
                         ))}
                       </select>
                     </div>
-                    {/* Location */}
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider">
+                      <label htmlFor="event-location" className="mb-1.5 block text-xs uppercase tracking-wider text-[#4b3727]">
                         Ubicación *
                       </label>
                       <input
+                        id="event-location"
                         name="location"
                         required
                         value={formData.location}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors placeholder:text-gray-600"
-                        placeholder="Dirección o zona"
+                        className="w-full border border-[#8d7359] bg-[#fbf5e7] px-4 py-2.5 text-sm text-[#24170f] transition-colors placeholder:text-[#8b7a66] focus:outline-none focus-visible:border-[#5f3527] focus-visible:ring-2 focus-visible:ring-[#b88a6e]/40"
+                        placeholder="Direccion o zona"
                       />
                     </div>
-                    {/* Instagram */}
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider">
+                      <label htmlFor="event-instagram" className="mb-1.5 block text-xs uppercase tracking-wider text-[#4b3727]">
                         Instagram
                       </label>
                       <input
+                        id="event-instagram"
                         name="instagram"
                         value={formData.instagram}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors placeholder:text-gray-600"
+                        className="w-full border border-[#8d7359] bg-[#fbf5e7] px-4 py-2.5 text-sm text-[#24170f] transition-colors placeholder:text-[#8b7a66] focus:outline-none focus-visible:border-[#5f3527] focus-visible:ring-2 focus-visible:ring-[#b88a6e]/40"
                         placeholder="@cuenta"
                       />
                     </div>
-                    {/* Start Date */}
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider">
+                      <label htmlFor="event-start" className="mb-1.5 block text-xs uppercase tracking-wider text-[#4b3727]">
                         Fecha Inicio *
                       </label>
                       <input
+                        id="event-start"
                         type="date"
                         name="start_date"
                         required
                         value={formData.start_date}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors"
+                        className="w-full border border-[#8d7359] bg-[#fbf5e7] px-4 py-2.5 text-sm text-[#24170f] transition-colors focus:outline-none focus-visible:border-[#5f3527] focus-visible:ring-2 focus-visible:ring-[#b88a6e]/40"
                       />
                     </div>
-                    {/* End Date */}
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider">
+                      <label htmlFor="event-end" className="mb-1.5 block text-xs uppercase tracking-wider text-[#4b3727]">
                         Fecha Fin *
                       </label>
                       <input
+                        id="event-end"
                         type="date"
                         name="end_date"
                         required
                         value={formData.end_date}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors"
+                        className="w-full border border-[#8d7359] bg-[#fbf5e7] px-4 py-2.5 text-sm text-[#24170f] transition-colors focus:outline-none focus-visible:border-[#5f3527] focus-visible:ring-2 focus-visible:ring-[#b88a6e]/40"
                       />
                     </div>
                   </div>
 
-                  {/* Description */}
                   <div>
-                    <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider">
-                      Descripción *
+                    <label htmlFor="event-description" className="mb-1.5 block text-xs uppercase tracking-wider text-[#4b3727]">
+                      Descripcion *
                     </label>
                     <textarea
+                      id="event-description"
                       name="description"
                       required
                       rows={3}
                       value={formData.description}
                       onChange={handleChange}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary/60 transition-colors resize-none placeholder:text-gray-600"
+                      className="w-full resize-none border border-[#8d7359] bg-[#fbf5e7] px-4 py-2.5 text-sm text-[#24170f] transition-colors placeholder:text-[#8b7a66] focus:outline-none focus-visible:border-[#5f3527] focus-visible:ring-2 focus-visible:ring-[#b88a6e]/40"
                       placeholder="Describe brevemente el evento..."
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="bg-primary text-black font-bold text-sm px-8 py-3 rounded-full hover:brightness-110 transition-all"
+                    className="newspaper-button-primary"
                   >
                     Enviar Solicitud
                   </button>
                 </form>
               </>
             )}
+            </div>
+          )}
           </div>
-        )}
+        </section>
 
-        {/* ── Filter Tabs ── */}
-        <div className="flex gap-2 mb-8 flex-wrap">
+        <section aria-labelledby="resultados-title">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 id="resultados-title" className="text-4xl font-bold tracking-tight text-[#1b140f] md:text-5xl">
+                Eventos destacados y accesibles
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-[#4b3727]">
+                Filtra por tipo para revisar la agenda. El estado de recomendacion se basa en estabilidad operativa y consistencia de la experiencia.
+              </p>
+            </div>
+            <p className="text-sm text-[#6b3525]" aria-live="polite">
+              Mostrando {filtered.length} {filtered.length === 1 ? "evento" : "eventos"} para el filtro {filter === "all" ? "Todos" : filter}.
+            </p>
+          </div>
+
+          <div className="mb-8 flex flex-wrap gap-2" role="toolbar" aria-label="Filtrar eventos por tipo">
           {["all", ...EVENT_TYPES].map((t) => (
             <button
               key={t}
+              type="button"
               onClick={() => setFilter(t)}
+              aria-pressed={filter === t}
               className={`text-xs px-4 py-2 rounded-full border transition-colors ${
                 filter === t
-                  ? "bg-white text-black border-white"
-                  : "border-white/10 text-white/50 hover:text-white hover:border-white/30"
+                  ? "border-[#5f3527] bg-[#5f3527] text-[#f4ead6]"
+                  : "border-[#8d7359] text-[#4b3727] hover:border-[#5f3527] hover:text-[#1b140f]"
               }`}
             >
               {t === "all" ? "Todos" : t}
             </button>
           ))}
-        </div>
+          </div>
 
-        {/* ── Event Grid ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {filtered.map((event) => {
             const isVolatile = event.consistency_score > 2.5;
 
             return (
-              <div
+              <article
                 key={event.id}
-                className="group flex flex-col md:flex-row bg-zinc-950 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all"
+                className="newspaper-panel group flex flex-col overflow-hidden transition-all hover:border-[#5f3527] md:flex-row"
+                aria-labelledby={`event-${event.id}`}
               >
-                {/* Event Poster */}
                 <div className="md:w-2/5 h-64 md:h-auto relative overflow-hidden">
                   <img
                     src={event.photos[0]}
-                    alt={event.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    alt={`Imagen promocional de ${event.name}`}
+                    className="newspaper-photo h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute top-4 left-4 bg-primary text-black font-bold text-xs px-2 py-1 rounded">
+                  <div className="absolute left-4 top-4 border border-[#5f3527] bg-[#f4ead6] px-2 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#5f3527]">
                     {event.event_type}
                   </div>
                 </div>
 
-                {/* Event Info */}
                 <div className="p-6 md:w-3/5 flex flex-col relative">
                   <div className="mb-4 flex-1">
-                    <div className="text-xs text-primary/80 font-mono mb-2 uppercase tracking-wider">
+                    <div className="mb-2 text-xs uppercase tracking-[0.18em] text-[#6b3525]">
                       {formatDate(event.start_date)} —{" "}
                       {formatDate(event.end_date)}
                     </div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    <h3 id={`event-${event.id}`} className="mb-2 text-4xl font-semibold leading-none text-[#1b140f] transition-colors group-hover:text-[#5f3527]">
                       {event.name}
                     </h3>
-                    <p className="text-sm text-zinc-400 mb-4 line-clamp-2">
+                    <p className="mb-4 text-sm leading-7 text-[#4b3727] line-clamp-3">
                       {event.description}
                     </p>
 
-                    <div className="flex items-center gap-2 text-xs text-zinc-500 bg-white/5 w-fit px-2 py-1 rounded">
-                      <span>📍 {event.location}</span>
+                    <div className="w-fit border border-dashed border-[#8d7359] px-2 py-1 text-xs uppercase tracking-[0.12em] text-[#4b3727]">
+                      <span>Ubicacion: {event.location}</span>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-white/10 flex justify-between items-center">
+                  <div className="flex items-center justify-between border-t border-[#8d7359] pt-4">
                     <div className="flex flex-col">
-                      <span className="text-xs text-zinc-500 uppercase tracking-wider">
+                      <span className="text-xs uppercase tracking-[0.18em] text-[#6b3525]">
                         Score Global
                       </span>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-black">
+                        <span className="text-3xl font-bold text-[#1b140f]">
                           {event.average_score.toFixed(1)}
                         </span>
                         {isVolatile ? (
-                          <span className="text-[10px] text-rose-500 bg-rose-500/10 px-1 py-0.5 rounded border border-rose-500/20">
-                            Pésima Organización
+                          <span className="border border-[#91412f] bg-[#edd7ce] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#91412f]">
+                            Riesgo operativo
                           </span>
                         ) : (
-                          <span className="text-[10px] text-emerald-500 bg-emerald-500/10 px-1 py-0.5 rounded border border-emerald-500/20">
+                          <span className="border border-[#536247] bg-[#e7e0cd] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#415038]">
                             Recomendado
                           </span>
                         )}
                       </div>
+                      <span className="mt-1 text-xs text-[#5b4a3a]">
+                        {event.total_reviews} opiniones registradas
+                      </span>
                     </div>
 
-                    <button className="text-sm px-4 py-2 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors">
-                      Ver Opiniones
-                    </button>
+                    <span className="border border-[#7f674d] px-4 py-2 text-sm font-medium uppercase tracking-[0.12em] text-[#4b3727]">
+                      Opiniones pronto
+                    </span>
                   </div>
                 </div>
-              </div>
+              </article>
             );
           })}
 
           {filtered.length === 0 && (
-            <div className="col-span-full text-center py-24 text-gray-500">
+            <div className="col-span-full py-24 text-center text-[#4b3727]" role="status" aria-live="polite">
               <p className="text-lg mb-2">No hay eventos de tipo &ldquo;{filter}&rdquo;</p>
               <button
+                type="button"
                 onClick={() => setFilter("all")}
-                className="text-sm text-primary hover:underline"
+                className="text-sm text-[#6b3525] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3527]"
               >
                 Ver todos
               </button>
             </div>
           )}
-        </div>
+          </div>
+        </section>
+      </div>
       </div>
     </main>
   );
